@@ -1,7 +1,8 @@
-# config.yaml - Konfigurasi Hermes Agent Institusi Pendidikan
+# config.yaml - Konfigurasi Hermes Agent SD/MI (Hybrid Model & Telegram Gateway)
 
 system:
   name: "fatimah-bot-brain"
+  institution_type: "Sekolah Dasar / Madrasah Ibtidaiyah"
   version: "0.21.0-pantheon"
   timezone: "Asia/Jakarta"
   default_locale: "id-ID"
@@ -17,24 +18,27 @@ orchestrator:
   max_peer_iterations: 3
   enable_bot_mode: true
   enable_swarm: true
+  approval_workflow: "two_tier_human_in_the_loop"
 
-# Strategi Model Berjenjang (Tiered Hybrid Model Strategy)
+# Arsitektur Model Berjenjang Hibrida (Groq + DeepSeek / OpenRouter + Local Fallback)
 profiles:
   pamong-utama:
-    model: "nousresearch/hermes-4-70b"
+    model: "deepseek/deepseek-chat" # DeepSeek V3 via OpenRouter / DeepSeek API (Hemat & Bernalar Kuat)
     fallback_model: "anthropic/claude-sonnet-4"
+    local_fallback: "ollama/qwen2.5:14b"
     reasoning_mode: "hybrid"
-    temperature: 0.4
+    temperature: 0.3
     context_window: 131072
     toolsets:
       - "kanban_create"
       - "hermes_peer"
       - "delegate_task"
-      - "gateway_messaging"
+      - "telegram_bot_gateway"
 
   kurikulum-guru:
-    model: "nousresearch/hermes-4-405b"
-    fallback_model: "nousresearch/deephermes-3"
+    model: "deepseek/deepseek-reasoner" # DeepSeek R1 / V3 untuk perancangan Modul Ajar SD mendalam
+    fallback_model: "nousresearch/hermes-4-70b"
+    local_fallback: "ollama/qwen2.5:14b"
     reasoning_mode: "true"
     temperature: 0.6
     context_window: 131072
@@ -45,9 +49,10 @@ profiles:
       - "hermes_peer"
 
   tata-usaha:
-    model: "nousresearch/hermes-3-llama-3.1-70b"
+    model: "groq/llama-3.3-70b-versatile" # Sangat cepat & patuh pada skema Permendikbud 3/2021
     fallback_model: "qwen/qwen-2.5-72b-instruct"
-    reasoning_mode: "false" # Non-reasoning untuk kepatuhan skema dan pencegahan overthinking
+    local_fallback: "ollama/qwen2.5:7b"
+    reasoning_mode: "false" # Non-reasoning untuk pencegahan overthinking & kepatuhan format
     temperature: 0.1
     context_window: 131072
     toolsets:
@@ -59,8 +64,8 @@ profiles:
       - "hermes_peer"
 
   kreator-humas:
-    model: "nousresearch/hermes-4-70b"
-    fallback_model: "nousresearch/hermes-3-70b"
+    model: "deepseek/deepseek-chat"
+    fallback_model: "groq/llama-3.3-70b-versatile"
     reasoning_mode: "hybrid"
     temperature: 0.7
     toolsets:
@@ -71,27 +76,29 @@ profiles:
       - "hermes_peer"
 
   sekretaris-rapat:
-    model: "nousresearch/hermes-3-llama-3.1-70b"
-    fallback_model: "groq/llama-3.3-70b-versatile"
+    model: "groq/llama-3.3-70b-versatile" # Ekstraksi notula instan
+    audio_transcription_model: "groq/whisper-large-v3" # Transkripsi audio Telegram super cepat
+    fallback_model: "deepseek/deepseek-chat"
     reasoning_mode: "false"
     temperature: 0.2
     context_window: 131072
     toolsets:
       - "whisper_stt"
       - "hermes_kanban"
-      - "google_calendar_mcp"
+      - "telegram_reminders"
       - "hermes_peer"
 
   mitra-pegawai:
-    model: "nousresearch/hermes-3-llama-3.1-8b"
-    fallback_model: "google/gemma-2-9b-it"
-    reasoning_mode: "false" # Respon cepat <2 detik
+    model: "groq/llama-3.3-70b-versatile" # Respon helpdesk <2 detik
+    fallback_model: "deepseek/deepseek-chat"
+    local_fallback: "ollama/gemma2:9b"
+    reasoning_mode: "false"
     temperature: 0.3
     context_window: 65536
     toolsets:
       - "bge_m3_vector_retriever"
       - "sqlite_fts5"
-      - "escalation_dispatcher"
+      - "telegram_escalation"
       - "hermes_peer"
 
 # Penyimpanan Persistensi & Database
@@ -102,17 +109,30 @@ storage:
   checkpointer: "PostgreSQLCheckpointer"
   session_persistence: true
 
-# Konfigurasi Gateway Pesan (WhatsApp & Telegram)
+# Konfigurasi Gateway Komunikasi Utama: Telegram Bot
 gateway:
-  webhook_port: 8080
-  async_response: true # Segera kirim 200 OK dalam <1s, lanjutkan di background worker
-  channels:
-    whatsapp:
-      provider: "whapi" # atau twilio / wppconnect
-      api_token: "${WHATSAPP_API_TOKEN}"
-      phone_number_id: "${WHATSAPP_PHONE_ID}"
-    telegram:
-      bot_token: "${TELEGRAM_BOT_TOKEN}"
+  channel: "telegram"
+  telegram:
+    bot_token: "${TELEGRAM_BOT_TOKEN}"
+    polling_mode: true # Ubah ke false dan isi webhook_url jika menggunakan webhook di VPS
+    webhook_url: "${TELEGRAM_WEBHOOK_URL}"
+    max_file_size_mb: 50
+    default_commands:
+      - command: "start"
+        description: "Membuka sambutan & menu utama Dr. Fatimah"
+      - command: "modul"
+        description: "Rancang Modul Ajar SD/MI Kurikulum Merdeka (Fase A-C)"
+      - command: "surat"
+        description: "Buat draf surat dinas resmi Permendikbud No. 3/2021"
+      - command: "notula"
+        description: "Kirim rekaman suara rapat KKG/Dewan Guru untuk notula"
+      - command: "refleksi_pmm"
+        description: "Panduan refleksi kinerja guru kelas di Ruang GTK/PMM"
+      - command: "status_kanban"
+        description: "Lihat status tugas dan proyek sekolah di Kanban"
+    approval_notifications:
+      target_role: "Kepala Sekolah"
+      enable_inline_buttons: true
 
 # Pengamanan Kontainer & Sandbox (Security Hardening)
 security:

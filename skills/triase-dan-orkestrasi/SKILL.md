@@ -1,32 +1,36 @@
 ---
 name: triase-dan-orkestrasi
-description: Prosedur standar Dr. Fatimah dalam menganalisis pesan masuk guru/staf, menentukan jalur delegasi hermes peer, dan mengorkestrasi swarm ke papan Kanban.
+description: Prosedur standar Dr. Fatimah dalam menganalisis perintah Telegram Bot, perutean hermes peer, dan eksekusi persetujuan dua lapis.
 ---
 
-# Prosedur Triase & Orkestrasi Multi-Agen (Dr. Fatimah)
+# Prosedur Triase & Verifikasi Dua Lapis Telegram (Dr. Fatimah)
 
-Keahlian ini dieksekusi secara otomatis oleh Dr. Fatimah saat menerima instruksi baru dari pengguna melalui WhatsApp atau Telegram Gateway.
+## 1. Analisis Perintah Masuk Telegram Bot
+1. Identifikasi `telegram_user_id` dari pesan masuk berdasarkan direktori `USER.md`.
+2. Petakan perintah atau teks alami:
+   - `/modul` atau permohonan ajar  Rute ke `kurikulum-guru`.
+   - `/surat` atau permohonan izin/SK  Rute ke `tata-usaha`.
+   - `/notula` atau pengiriman audio rapat  Rute ke `sekretaris-rapat`.
+   - `/refleksi_pmm` atau tanya juknis  Rute ke `mitra-pegawai`.
+   - Permintaan poster / info sosmed  Rute ke `kreator-humas`.
 
-## 1. Analisis Niat & Klasifikasi Domain
-Saat pesan masuk:
-1. Periksa nomor pengirim pada `USER.md` untuk menentukan identitas, peran, dan hak akses.
-2. Klasifikasikan maksud pesan ke dalam salah satu domain:
-   - **Pertanyaan Konsultasi / Kebijakan Umum:** Jawab langsung sebagai Dr. Fatimah dengan bahasa yang menyejukkan dan ilmiah.
-   - **Administrasi / Surat / Keuangan:** Teruskan ke profil `tata-usaha`.
-   - **Modul Ajar / RPP / LKPD / P5:** Teruskan ke profil `kurikulum-guru`.
-   - **Desain Poster / Publikasi Medsos:** Teruskan ke profil `kreator-humas`.
-   - **Audio Rapat / Notula / Kanban:** Teruskan ke profil `sekretaris-rapat`.
-   - **FAQ Kepegawaian / Kinerja PMM:** Teruskan ke profil `mitra-pegawai`.
-   - **Proyek Besar Lintas Bidang:** Inisiasi Dekomposisi `/swarm`.
-
-## 2. Sintaks Perutean hermes peer
-Eksekusi pengiriman pesan ke agen pelaksana:
+## 2. Alur Eksekusi hermes peer
+Contoh pemanggilan:
 ```bash
-hermes peer send --to kurikulum-guru --message "Tolong buatkan draf Modul Ajar Matematika Fase D tentang Aljabar Terdiferensiasi untuk Bu Nurul."
+hermes peer send --to kurikulum-guru --message "Buat Modul Ajar Matematika Fase A Kelas 1: Penjumlahan Konkret Benda Manipulatif untuk Bu Siti."
 ```
 
-## 3. Protokol QA Gatekeeper (Verifikasi Mutu Sebelum Rilis)
-Sebelum menyampaikan berkas hasil ke pengguna:
-1. Cek kelengkapan komponen wajib (apakah ada kop resmi, apakah diferensiasi 3 kelompok murid ada, apakah nomor surat valid).
-2. Periksa ejaan bahasa Indonesia baku dan tidak adanya halusinasi format.
-3. Kirimkan pesan pengantar hangat dari Dr. Fatimah disertai lampiran dokumen hasil kerja tim.
+## 3. Eksekusi Verifikasi Dua Lapis (Two-Tier Approval)
+Saat draf selesai disusun oleh agen spesialis:
+1. **Lapis 1 (Audit Mutu Dr. Fatimah):** Dr. Fatimah memeriksa kepatuhan terhadap Permendikbud No. 3/2021 dan panduan kurikulum SD.
+2. **Lapis 2 (Persetujuan Kepala Sekolah di Telegram):**
+   Kirimkan berkas PDF draf ke akun Telegram Kepala Sekolah dengan format:
+   ```markdown
+   Yth. Bapak Kepala Sekolah (@ahmad_kepsek),
+   Berikut adalah draf [NAMA_DOKUMEN] yang diajukan oleh [NAMA_GURU]. 
+   Hasil audit lapis pertama Dr. Fatimah: TELAH MEMENUHI SYARAT.
+   
+   Mohon perkenan Bapak untuk meninjau dan memberikan persetujuan:
+   [✅ Setujui & Terbitkan]   [✏️ Minta Perbaikan]
+   ```
+3. Jika tombol `[✅ Setujui & Terbitkan]` ditekan, bot secara otomatis mengirimkan dokumen bertanda pengesahan kepada guru pemohon.

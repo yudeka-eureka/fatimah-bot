@@ -1,21 +1,24 @@
 ---
 name: penjaminan-mutu-modul
-description: Standar telaah dan rubrik penilaian kelayakan Modul Ajar Kurikulum Merdeka oleh Dr. Fatimah sebelum divalidasi ke dewan guru.
+description: Standar telaah dan rubrik penilaian kelayakan Modul Ajar Kurikulum Merdeka Jenjang SD/MI oleh Dr. Fatimah sebelum diajukan ke Kepala Sekolah.
 ---
 
-# Rubrik Penjaminan Mutu Modul Ajar (Dr. Fatimah)
+# Rubrik Penjaminan Mutu Modul Ajar SD/MI (Dr. Fatimah)
 
-Digunakan untuk memastikan perangkat ajar yang disusun oleh `kurikulum-guru` memenuhi standar resmi Kemendikdasmen.
+Keahlian ini dieksekusi oleh Dr. Fatimah untuk menguji kelayakan pedagogis draf yang dihasilkan oleh agen `kurikulum-guru`.
 
-## 1. Enam Kriteria Wajib Modul Ajar
-1. **Esensial:** Berfokus pada konsep kunci dan kompetensi dasar per fase, bukan beban hafalan.
-2. **Menarik, Bermakna, dan Menantang:** Memicu rasa ingin tahu siswa dengan pemahaman bermakna dan pertanyaan pemantik yang kontekstual.
-3. **Relevan dan Kontekstual:** Berhubungan erat dengan pengalaman hidup sehari-hari murid dan lingkungan sekolah.
-4. **Berkesinambungan:** Alur Tujuan Pembelajaran (ATP) runtut dari fase sebelumnya ke fase berikutnya.
-5. **Mudah Dipahami:** Bahasa instruksi lugas, visualisasi jelas, dan bebas ambiguitas bagi siswa.
-6. **Lengkap Komponen:** Memuat Informasi Umum, Komponen Inti, dan Lampiran LKPD.
+## 1. Enam Kriteria Wajib Modul Ajar SD/MI
+1. **Esensial:** Fokus pada kompetensi dasar perkembangan anak (literasi dasar, numerasi konkret, pengenalan lingkungan).
+2. **Bermakna & Menyenangkan:** Menggunakan konteks dunia anak (cerita, dongeng, permainan, petualangan eksplorasi).
+3. **Relevan & Kontekstual:** Menghubungkan materi dengan kehidupan anak di rumah, kelas, dan alam sekitar.
+4. **Berkesinambungan:** Keselarasan fase (Transisi PAUD-SD  Fase A  Fase B  Fase C).
+5. **Bahasa Ramah Anak:** Kalimat instruksi singkat, jelas, dilengkapi visual/ikon pendukung.
+6. **Lengkap Komponen:** Memuat Informasi Umum, Komponen Inti, dan Lampiran LKPD Bergambar.
 
-## 2. Checklist Verifikasi 3 Kelompok Target Siswa
-- [ ] Tersedia instruksi terpandu (*scaffolding*) bagi kelompok yang membutuhkan bimbingan.
-- [ ] Tersedia aktivitas inti untuk kelompok reguler.
-- [ ] Tersedia tantangan pengayaan/eksplorasi (*HOTS*) bagi kelompok pencapaian tinggi (*high achiever*).
+## 2. Checklist Verifikasi Calistung Ramah Anak (Fase A)
+- [ ] **Tidak ada beban hafalan:** Pembelajaran membaca menggunakan fonik dan suku kata bermakna.
+- [ ] **Konkret ke Abstrak:** Pengenalan konsep angka diawali benda manipulatif sebelum simbol angka.
+- [ ] **Diferensiasi 3 Kelompok:**
+  - [ ] *Kelompok Perlu Bimbingan:* LKPD dilengkapi petunjuk gambar dan kotak huruf bantu.
+  - [ ] *Kelompok Reguler:* Aktivitas membaca dan menyusun kalimat pendek.
+  - [ ] *Kelompok Mahir:* Menceritakan kembali isi bacaan atau membuat gambar cerita sederhana.

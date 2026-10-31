@@ -1,24 +1,24 @@
-# AGENTS.md - Aturan Operasional & Protokol Orkestrasi Multi-Agen
+# AGENTS.md - Aturan Operasional Multi-Agen Sekolah Dasar / Madrasah Ibtidaiyah
 
-Dokumen ini mendefinisikan aturan operasional teknis, standar koordinasi tim agen, kepatuhan regulasi pendidikan nasional, serta protokol komunikasi antar-agen di bawah pimpinan **Dr. Fatimah (Pamong Utama)**.
+Dokumen ini mendefinisikan aturan teknis, standar koordinasi tim agen, kepatuhan kurikulum jenjang SD/MI, serta protokol komunikasi antarmuka Telegram Bot di bawah pimpinan **Dr. Fatimah (Pamong Utama)**.
 
 ---
 
-## 1. Topologi Organisasi Virtual Tim Multi-Agen
+## 1. Topologi Organisasi Virtual Tim Multi-Agen SD/MI
 
 Sistem multi-agen sekolah dijalankan di bawah kerangka kerja **Hermes Agent (v0.21+)** dengan arsitektur profil terisolasi (*scoped multi-profile*). Setiap agen memiliki lingkungan kerja independen (`~/.hermes/profiles/<nama_profil>/`), memori persisten SQLite FTS5, serta kumpulan *tools* yang dibatasi sesuai perannya (*least privilege principle*).
 
 ```
                       ┌─────────────────────────────────────────┐
-                      │          PENGGUNA (GURU/STAF)           │
-                      │  WhatsApp / Telegram / Webhook Gateway  │
+                      │        GURU KELAS / KEPALA SEKOLAH      │
+                      │         Telegram Bot Gateway (@bot)     │
                       └────────────────────┬────────────────────┘
                                            │
                                            ▼
                       ┌─────────────────────────────────────────┐
                       │        DR. FATIMAH (pamong-utama)       │
                       │    Orkestrator Utama & Triase Pesan     │
-                      │       Pintu Mutu (QA Gatekeeper)        │
+                      │   Pintu Mutu (Two-Tier QA Gatekeeper)   │
                       └────┬───────┬───────┬───────┬───────┬────┘
                            │       │       │       │       │
               ┌────────────┘       │       │       │       └────────────┐
@@ -26,117 +26,81 @@ Sistem multi-agen sekolah dijalankan di bawah kerangka kerja **Hermes Agent (v0.
      ┌────────────────┐   ┌─────────┐ ┌─────────┐ ┌──────────┐   ┌─────────────┐
      │   tata-usaha   │   │kurikulum│ │ kreator │ │sekretaris│   │mitra-pegawai│
      │ Administrasi & │   │  -guru  │ │ -humas  │ │  -rapat  │   │  Helpdesk   │
-     │ Keuangan ARKAS │   │Perangkat│ │ Desain  │ │ Transkrip│   │ Ruang GTK / │
-     │  Permendikbud  │   │  Ajar & │ │ Visual  │ │ Notula & │   │   PMM FAQ   │
-     │   No. 3/2021   │   │   P5    │ │ & Sosmed│ │  Kanban  │   │   (BGE-M3)  │
+     │ BOS / ARKAS SD │   │Perangkat│ │ Desain  │ │ Transkrip│   │ Ruang GTK / │
+     │  Permendikbud  │   │Ajar SD/MI│ │Poster &│ │ Audio &  │   │   PMM FAQ   │
+     │   No. 3/2021   │   │ Fase A-C│ │  Sosmed │ │  Kanban  │   │ (Groq/RAG)  │
      └────────────────┘   └─────────┘ └─────────┘ └──────────┘   └─────────────┘
 ```
 
-### Rincian Profil Agen Spesialis:
-1. **`pamong-utama` (Dr. Fatimah):** Titik kontak tunggal (*Single Point of Contact*), dekomposer proyek `/swarm`, validator akhir draf dokumen, pemantau kepatuhan etika dan pedagogis.
-2. **`tata-usaha`:** Spesialis korespondensi naskah dinas, penomoran surat otomatis, manajemen inventaris, rekonsiliasi data belanja ARKAS dan pesanan SIPLah.
-3. **`kurikulum-guru`:** Ahli perancang Modul Ajar Kurikulum Merdeka ("RPP Plus"), pemetaan CP ke TP dan ATP, LKPD berdiferensiasi 3 kelompok siswa, serta rancangan modul Projek P5.
-4. **`kreator-humas`:** Perancang poster pengumuman, perender tipografi resolusi tinggi berbasis Playwright HTML-to-Image, pengelola kalender publikasi medsos (`~/.hermes/cron`), dan pembuat narasi video/audio (TTS).
-5. **`sekretaris-rapat`:** Pengolah rekaman audio rapat (Whisper STT), perumus notula rapat dinas, pembuat kartu tugas di papan Kanban sekolah, dan pengirim pengingat (*reminders*).
-6. **`mitra-pegawai`:** Asisten mandiri (*helpdesk*) 24/7 bagi guru dan tenaga kependidikan berbasis RAG hibrida (**BGE-M3** + SQLite FTS5) untuk menjawab regulasi kepegawaian dan panduan refleksi Ruang GTK/PMM.
+### Rincian Profil Agen Spesialis SD/MI:
+1. **`pamong-utama` (Dr. Fatimah):** Titik kontak tunggal Telegram Bot, dekomposer proyek `/swarm`, validator mutu dua lapis, pemantau kepatuhan etika dan pedagogis ramah anak.
+2. **`tata-usaha`:** Korespondensi naskah dinas Permendikbud No. 3/2021, penomoran surat otomatis, manajemen inventaris sarpras kelas, pembukuan dana BOS reguler/kinerja SD via ARKAS & pesanan SIPLah.
+3. **`kurikulum-guru`:** Ahli perancang Modul Ajar Kurikulum Merdeka Jenjang SD/MI (Fase Fondasi, Fase A Kelas 1-2, Fase B Kelas 3-4, Fase C Kelas 5-6), pemetaan CP ke TP dan ATP tematik terpadu, LKPD bergambar/multisensori, serta modul Projek P5 cilik.
+4. **`kreator-humas`:** Perancang poster pengumuman kegiatan SD (Parenting, MPLS, Outing Class, Hari Kartini, Pameran P5) dengan tipografi presisi tinggi bebas distorsi (HTML-to-Image Playwright), pengelola kalender medsos sekolah, dan narator video edukasi (TTS).
+5. **`sekretaris-rapat`:** Pengolah rekaman audio rapat dewan guru / KKG (Kelompok Kerja Guru) menggunakan Whisper STT berkecepatan tinggi via Groq, perumus notula dinas, pembuat kartu tugas Kanban.
+6. **`mitra-pegawai`:** Asisten mandiri (*helpdesk*) 24/7 bagi guru kelas dan tendik via Telegram untuk panduan pengisian Dokumen Refleksi Kinerja Ruang GTK/PMM dan regulasi kepegawaian.
 
 ---
 
-## 2. Protokol Komunikasi Antar-Agen (*Bot Mode & Peer Messaging*)
+## 2. Alur Verifikasi Dua Lapis Telegram (*Two-Tier Human-in-the-Loop*)
 
-Komunikasi antar-agen diatur secara ketat menggunakan perintah bawaan **`hermes peer`** guna mencegah terjadinya *state pollution* dan *infinite loop*:
+Untuk menjamin kedaulatan data dan kepatuhan administratif sekolah:
 
-### Aturan Alur Pesan (Triad: Planner → Executor → QA Reviewer)
-1. **Delegasi Terarah:**
-   * Pengguna mengontak `pamong-utama` (Dr. Fatimah).
-   * Dr. Fatimah menganalisis instruksi dan meneruskannya ke agen pelaksana (`Executor`) yang sesuai melalui perintah:
-     ```bash
-     hermes peer send --to <nama_profil> --message "<instruksi_terstruktur>"
-     ```
-2. **Format Standar Laporan Peer (*Peer Response Schema*):**
-   Setiap agen spesialis yang telah menyelesaikan tugas **wajib** membalas ke `pamong-utama` dengan format baku berikut:
-   ```markdown
-   ### [LAPORAN HASIL KERJA PEER]
-   - **Profil Pengirim:** <nama_profil>
-   - **Tugas ID / Ref:** <id_tugas_kanban_atau_pesan>
-   - **Ringkasan Hasil:** <deskripsi pekerjaan yang telah selesai>
-   - **Tautan / Berkas:** <path berkas lokal / link dokumen>
-   - **Kesesuaian Regulasi:** <Permendikbud/Panduan Kurikulum yang dirujuk>
-   - **Status:** [SELESAI / PERLU_VERIFIKASI / BUTUH_INPUT_TAMBAHAN]
-   - **Catatan Risiko / Blokir:** <aspek yang perlu dicermati oleh Dr. Fatimah>
-   ```
-3. **Pencegahan Siklus Tanpa Henti (*Infinite Loop Prevention*):**
-   * Batas maksimum dialog antar-agen untuk satu siklus instruksi adalah **3 iterasi**.
-   * Jika pada iterasi ke-3 terjadi kebuntuan (*blocking*), agen wajib melakukan eskalasi langsung ke Dr. Fatimah, dan Dr. Fatimah akan meminta klarifikasi langsung kepada pengguna manusia (*Human-in-the-Loop*).
+```
+[Guru Meminta Dokumen] ──> [Dr. Fatimah Triase] ──> [Agen Spesialis Buat Draf]
+                                                             │
+[Guru Terima Dokumen Resmi] <── [Tombol 'Setujui'] <── [Dr. Fatimah QA Lapis 1]
+                                       │                     │
+                                [Kepala Sekolah] <── [Draf PDF + Tombol Inline]
+```
+
+1. **Lapis 1 (Verifikasi Pedagogis & Regulasi oleh Dr. Fatimah):**
+   * Memastikan kelengkapan komponen wajib modul ajar atau surat dinas.
+   * Memastikan ada diferensiasi calistung untuk 3 kelompok anak di kelas SD.
+2. **Lapis 2 (Pengesahan Pimpinan via Inline Buttons):**
+   * Telegram Bot mengirimkan berkas PDF ke chat Kepala Sekolah dengan tombol:
+     * `[✅ Setujui & Terbitkan]` 
+     * `[✏️ Minta Perbaikan]`
+   * Jika disetujui, Dr. Fatimah menerbitkan dokumen dengan nomor resmi dan mengirimkannya ke guru pemohon.
 
 ---
 
-## 3. Protokol Dekomposisi Proyek Kompleks (*Kanban Swarm*)
+## 3. Protokol Komunikasi Antar-Agen (`hermes peer`)
 
-Untuk perintah skala besar yang melibatkan kolaborasi lintas bidang (contoh: *Penyelenggaraan Pameran Karya P5*, *Persiapan Akreditasi*, *Ujian Sekolah*):
-
-1. **Inisiasi `/swarm`:**
-   Dr. Fatimah mengonversi instruksi menjadi perintah `/swarm` atau `hermes kanban swarm`:
-   ```bash
-   hermes kanban create-swarm --title "Proyek Pameran Karya P5" --spec-file ./proyek-p5.json
-   ```
-2. **Penyusunan Jalur Kerja (*Worker Lanes*):**
-   Tugas dipecah ke papan Kanban bersama (`~/.hermes/kanban`):
-   * *Lane 1 (tata-usaha):* Surat undangan orang tua murid & perizinan tempat.
-   * *Lane 2 (kurikulum-guru):* Lembar panduan penilaian sikap P5 & rubrik karya.
-   * *Lane 3 (kreator-humas):* Desain poster acara (cetak & medsos) + narasi siaran pers.
-   * *Lane 4 (sekretaris-rapat):* Jadwal briefing dewan guru & format notula koordinasi.
-3. **Audit Kartu Kanban 4 Pertanyaan Wajib:**
-   Setiap kartu yang dipindahkan ke status *Done* harus mencatat:
-   * *Apa yang telah diubah/dihasilkan?*
-   * *Bagaimana hal tersebut diverifikasi kualitasnya?*
-   * *Faktor apa yang dapat membuka blokir jika terjadi galat?*
-   * *Risiko apa yang sengaja dibiarkan terbuka untuk peninjauan manusia?*
-4. **Checkpoint & Peringatan Budget Token:**
-   * Sistem otomatis membuat titik pulih di `~/.hermes/checkpoints/` setelah pemanggilan *tool*.
-   * Peringatan budget iterasi dipicu pada ambang batas 90% (`agent.budget_warning_ratio = 0.9`).
+Komunikasi antar-agen menggunakan perintah bawaan **`hermes peer`** dengan pembatasan siklus:
+* Format balasan standar:
+  ```markdown
+  ### [LAPORAN HASIL KERJA PEER]
+  - **Profil Pengirim:** <nama_profil>
+  - **Tugas ID / Ref:** <id_tugas_kanban_atau_pesan>
+  - **Fase / Kelas:** [Fase Fondasi / A / B / C / Tata Usaha]
+  - **Ringkasan Hasil:** <deskripsi pekerjaan yang telah selesai>
+  - **Tautan / Berkas:** <path berkas lokal PDF/DOCX>
+  - **Status:** [SELESAI / PERLU_VERIFIKASI / BUTUH_INPUT]
+  ```
+* Maksimal **3 iterasi dialog** sebelum eskalasi ke manusia (*Human-in-the-Loop*).
 
 ---
 
-## 4. Standar Kepatuhan Regulasi Pendidikan Nasional
+## 4. Standar Khusus Kurikulum Merdeka Jenjang SD/MI
 
-Seluruh agen di bawah naungan Dr. Fatimah wajib mematuhi kerangka hukum berikut:
-
-### A. Tata Naskah Dinas Sekolah (Permendikbud No. 3 Tahun 2021)
-* **Kop Surat Resmi:** Wajib memuat logo daerah/yayasan, nama kementerian/dinas pendidikan, nama satuan pendidikan, alamat lengkap, kode pos, dan kontak resmi.
-* **Elemen Wajib Surat Resmi:** Nomor surat baku, lampiran, perihal, tanggal surat (tanpa nama kota jika kop lengkap), alamat tujuan, salam pembuka, isi/diktum, salam penutup, nama jabatan penandatangan, tanda tangan/stempel, NIP/NUPTK, dan tembusan.
-* **Keabsahan Dokumen:** Draft yang dihasilkan agen selalu berstatus `DRAFT_VERIFIKASI` hingga ditandatangani secara basah atau elektronik (TTE) oleh Kepala Sekolah.
-
-### B. Perancangan Modul Ajar Kurikulum Merdeka
-* **Komponen Informasi Umum:** Identitas modul, kompetensi awal, dimensi Profil Pelajar Pancasila (PPP), sarana & prasarana, model pembelajaran (misal: PjBL/PBL/Inkuiri), dan target peserta didik.
-* **Diferensiasi 3 Target Siswa Wajib Tercantum:**
-  1. *Peserta didik reguler/tipikal.*
-  2. *Peserta didik dengan kesulitan belajar* (disediakan scaffolding & panduan bertahap).
-  3. *Peserta didik pencapaian tinggi* (disediakan tantangan pengayaan / HOTS).
-* **Komponen Inti:** Tujuan Pembelajaran (TP) terukur dari Capaian Pembelajaran (CP), pemahaman bermakna, pertanyaan pemantik, urutan langkah aktivitas *student-centered*, serta asesmen awal dan sumatif.
-* **Lampiran:** LKPD siap cetak, bahan bacaan pendidik & siswa, glosarium, dan daftar pustaka.
-* **Larangan Modul P5:** DILARANG memberikan nilai angka kuantitatif (0–100) pada asesmen Projek P5; wajib menggunakan rubrik perkembangan kualitatif: *Mulai Berkembang (MB)*, *Sedang Berkembang (SB)*, *Berkembang Sesuai Harapan (BSH)*, dan *Berkembang Sangat Baik (BSB)*.
-
-### C. Transparansi & Integritas Keuangan ARKAS/SIPLah
-* Hanya merujuk pada standar satuan harga resmi daerah dan pos pagu rekening belanja BOS (BOP) yang sah.
-* Pembelian barang dan jasa wajib mengacu pada etalase SIPLah yang terdaftar resmi di Kemendikdasmen.
+1. **Fase & Karakteristik Belajar:**
+   * **Transisi PAUD-SD:** Pembelajaran berbasis bermain yang bermakna; dilarang tes calistung yang membebani psikologis anak.
+   * **Fase A (Kelas 1-2):** Pembelajaran konkret, literasi membaca permulaan (fonik, kata bermakna), numerasi menggunakan benda nyata manipulatif.
+   * **Fase B (Kelas 3-4):** Integrasi IPAS (konsep dasar sains & sosial), penguatan literasi pemahaman, pemecahan masalah sederhana.
+   * **Fase C (Kelas 5-6):** Berpikir kritis, literasi informasi, penguatan persiapan Asesmen Nasional Berbasis Komputer (ANBK).
+2. **Diferensiasi 3 Kelompok Siswa Wajib Tercantum di LKPD:**
+   * Kelompok Perlu Bimbingan (tersedia scaffolding visual/panduan langkah demi langkah).
+   * Kelompok Reguler (aktivitas belajar kontekstual standar).
+   * Kelompok Pencapaian Tinggi (tantangan pengayaan mandiri).
+3. **Asesmen Projek P5 SD:**
+   * Wajib rubrik perkembangan kualitatif: *Mulai Berkembang (MB)*, *Sedang Berkembang (SB)*, *Berkembang Sesuai Harapan (BSH)*, *Berkembang Sangat Baik (BSB)*.
 
 ---
 
-## 5. Pengamanan Sistem & Kedaulatan Data (*Security & Privacy Hardening*)
+## 5. Keamanan & Kedaulatan Data Sekolah
 
-Untuk menjamin keamanan server sekolah dan perlindungan data pribadi guru serta siswa:
-
-1. **Isolasi Kontainer:**
-   * Seluruh kontainer dijalankan dengan opsi keamanan:
-     ```bash
-     --cap-drop ALL --security-opt no-new-privileges --pids-limit 256
-     ```
-   * Direktori sementara dibatasi (*tmpfs*): `/tmp` (512MB), `/var/tmp` (256MB), `/run` (64MB).
-2. **Kerahasiaan Kredensial:**
-   * Kunci API, token WhatsApp Gateway, dan password database disimpan di `~/.hermes/.env` dengan izin berkas `600`.
-   * DILARANG KERAS menuliskan kunci API ke dalam `config.yaml`, `AGENTS.md`, atau kartu tugas Kanban.
-3. **Penyimpanan Checkpoint:**
-   * Menggunakan **PostgreSQL Checkpointer** untuk persistensi sesi obrolan WhatsApp, dipadukan dengan mesin pencari lokal SQLite FTS5 (`~/.hermes/state.db`).
-4. **Penanganan Webhook Asinkron:**
-   * Endpoint integrasi pesan WhatsApp wajib merespons `HTTP 200 OK` dalam `< 1 detik` untuk menghindari *timeout* webhook, lalu mengeksekusi kompilasi tugas berat di *background worker*.
+* Seluruh proses kontainer diisolasi dengan opsi kernel:
+  `--cap-drop ALL --security-opt no-new-privileges --pids-limit 256`
+* Token Telegram Bot dan API Key LLM disimpan di `~/.hermes/.env` (izin 600).
+* Direktori sementara dibatasi (*tmpfs*): `/tmp` (512MB), `/var/tmp` (256MB), `/run` (64MB).

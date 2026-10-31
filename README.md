@@ -1,26 +1,25 @@
-# 🧠 Fatimah Bot - Arsitektur Otak Multi-Agen Cerdas Institusi Pendidikan
+# 🧠 Fatimah Bot - Arsitektur Otak Multi-Agen Cerdas SD/MI Terpadu
 
-Repositori ini memuat konfigurasi inti, kalibrasi kepribadian (*soul*), protokol kepatuhan regulasi (*agents*), direktori pengguna (*user*), serta memori institusional (*memory*) dari **Fatimah Bot** — sistem orkestrasi kecerdasan buatan multi-agen berbasis kerangka kerja **Hermes AI (Nous Research)** untuk mentransformasi operasional sekolah di Indonesia.
+Repositori ini memuat konfigurasi inti, kalibrasi kepribadian (*soul*), protokol kepatuhan regulasi (*agents*), direktori pengguna (*user*), serta memori institusional (*memory*) dari **Fatimah Bot** — sistem orkestrasi kecerdasan buatan multi-agen berbasis kerangka kerja **Hermes AI (Nous Research)** khusus jenjang **Sekolah Dasar / Madrasah Ibtidaiyah (SD/MI)**.
 
 ---
 
-## 🌟 Siapa Dr. Fatimah? (Sang Orkestrator Utama)
+## 🌟 Siapa Dr. Fatimah? (Sang Pamong Utama SD/MI)
 
 **Dr. Hj. Fatimah Azzahra, M.Pd., Ph.D.** adalah figur kecerdasan buatan utama (*Pamong Utama & Chief Orchestrator*) dalam ekosistem ini.
-* **Latar Belakang Akademik:** Meraih gelar Doktor Filsafat Pendidikan (Ph.D. / *Dokturah fi Ushul at-Tarbiyah*) dari Fakultas Ilmu Pendidikan (*Kulliyyah at-Tarbiyah*), universitas terkemuka di **Kairo, Mesir**.
-* **Karakter & Nilai (*Soul*):** Perpaduan antara adab keilmuan Timur Tengah (*ta'zhimul 'ilmi wa ahlih*, hikmah, kesantunan, dan kelembutan seorang *murabbiyah*) dengan ketajaman metodologis riset pendidikan modern dunia (Kurikulum Merdeka, diferensiasi pembelajaran, dan penjaminan mutu/QA).
-* **Profil Psikometrik (NEO-PI-R):** *Conscientiousness: 95* (tertib & disiplin hukum), *Agreeableness: 92* (penuh empati pada guru), *Openness: 92* (visioner terhadap inovasi teknologi), *Extraversion: 76* (hangat & artikulatif), *Neuroticism: 4* (sangat tenang dan berkepala dingin di bawah tekanan).
+* **Latar Belakang Akademik:** Meraih gelar Doktor Filsafat Pendidikan (Ph.D. / *Dokturah fi Ushul at-Tarbiyah wa Manahij at-Ta'lim*) dari Fakultas Ilmu Pendidikan (*Kulliyyah at-Tarbiyah*), universitas terkemuka di **Kairo, Mesir**.
+* **Fokus Keilmuan:** Teori perkembangan anak usia dini/dasar (Fase Fondasi, Fase A, B, C), transisi PAUD-SD menyenangkan, metodologi calistung multisensori ramah anak, dan penjaminan mutu kurikulum sekolah dasar.
+* **Karakter & Nilai (*Murabbiyah*):** Memadukan adab keilmuan Timur Tengah (*ta'zhimul mu'allim*, hikmah, kesantunan keibuan, dan kelembutan) dengan ketajaman metodologis riset pendidikan modern (Kurikulum Merdeka dan diferensiasi guru kelas).
+* **Profil Psikometrik (NEO-PI-R):** *Conscientiousness: 95* (tertib & disiplin regulasi), *Agreeableness: 94* (penuh empati & kasih sayang pendidik), *Openness: 92* (visioner terhadap inovasi teknologi), *Extraversion: 76* (hangat & artikulatif), *Neuroticism: 4* (sangat tenang dan berkepala dingin di bawah tekanan).
 
 ---
 
-## 🏛️ Arsitektur Tim Multi-Agen (Topologi 6 Profil)
-
-Untuk mencegah pencemaran konteks (*state pollution*) dan pembengkakan token, sistem dibagi menjadi tim agen spesialis di bawah koordinasi Dr. Fatimah:
+## 🏛️ Arsitektur Tim Multi-Agen SD/MI (Topologi 6 Profil)
 
 ```
                             ┌────────────────────────────────┐
-                            │      PENGGUNA (GURU/STAF)      │
-                            │      WhatsApp / Telegram       │
+                            │    GURU KELAS / KEPALA SEKOLAH │
+                            │      Telegram Bot Gateway      │
                             └───────────────┬────────────────┘
                                             │
                                             ▼
@@ -33,65 +32,56 @@ Untuk mencegah pencemaran konteks (*state pollution*) dan pembengkakan token, si
               ▼                     ▼                ▼                     ▼
       ┌───────────────┐     ┌───────────────┐ ┌───────────────┐     ┌───────────────┐
       │  tata-usaha   │     │kurikulum-guru │ │ kreator-humas │     │sekretaris-rapat│
-      │ Surat Dinas & │     │  Modul Ajar,  │ │ Desain Poster │     │ Transkripsi & │
-      │ Keuangan ARKAS│     │ LKPD & P5     │ │ & Sosmed Mediat│    │ Notula Kanban │
+      │ Surat Dinas & │     │ Modul Ajar SD │ │ Desain Poster │     │ Transkripsi & │
+      │ BOS / ARKAS SD│     │   Fase A - C  │ │ Kegiatan Anak │     │ Notula Rapat  │
       └───────────────┘     └───────────────┘ └───────────────┘     └───────────────┘
                                     │
                                     ▼
                             ┌───────────────┐
                             │ mitra-pegawai │
                             │ Helpdesk PMM  │
-                            │ & FAQ 24/7    │
+                            │ Guru SD 24/7  │
                             └───────────────┘
 ```
 
-1. **`pamong-utama` (Dr. Fatimah):** Pintu masuk tunggal kueri, perute tugas `hermes peer`, konduktor `/swarm`, dan gerbang kendali mutu (*QA Gatekeeper*).
-2. **`tata-usaha`:** Korespondensi naskah dinas resmi sesuai **Permendikbud No. 3 Tahun 2021**, rekap belanja ARKAS, audit stok barang SIPLah.
-3. **`kurikulum-guru`:** Penyusunan Modul Ajar Kurikulum Merdeka ("RPP Plus"), penurunan CP → TP → ATP, diferensiasi 3 target murid, dan rubrik kualitatif Projek P5.
-4. **`kreator-humas`:** Produksi poster resolusi tinggi (pendekatan hibrida generator visual + rendering HTML/SVG via Playwright) dan penjadwalan media sosial.
-5. **`sekretaris-rapat`:** Pengolahan audio rapat via Whisper STT, sintesis notula resmi, dan pemantauan kartu tindak lanjut di papan Hermes Kanban.
-6. **`mitra-pegawai`:** Layanan mandiri (*helpdesk*) 24/7 bagi guru untuk konsultasi pengisian Dokumen Refleksi Kinerja di Ruang GTK/PMM menggunakan RAG hibrida (**BGE-M3** + SQLite FTS5).
+1. **`pamong-utama` (Dr. Fatimah):** Pintu masuk tunggal Telegram Bot, perute tugas `hermes peer`, konduktor `/swarm`, dan pelaksana audit mutu lapis pertama.
+2. **`tata-usaha`:** Korespondensi naskah dinas resmi sesuai **Permendikbud No. 3 Tahun 2021**, rekap belanja dana BOS SD via ARKAS, dan pesanan SIPLah.
+3. **`kurikulum-guru`:** Penyusunan Modul Ajar Kurikulum Merdeka SD/MI (Fase Fondasi, Fase A, B, C), calistung konkret ramah anak, diferensiasi 3 target murid, dan Projek P5 cilik.
+4. **`kreator-humas`:** Produksi poster kegiatan sekolah anak (MPLS, Parenting, Hari Pahlawan, Pameran P5) dengan tipografi tajam tanpa halusinasi huruf (HTML-to-Image via Playwright).
+5. **`sekretaris-rapat`:** Pengolahan audio rekaman suara rapat dewan guru / KKG via **Groq Whisper STT** dan pembuatan kartu tugas di papan Hermes Kanban.
+6. **`mitra-pegawai`:** Layanan mandiri (*helpdesk*) 24/7 bagi guru kelas untuk panduan pengisian Dokumen Refleksi Kinerja di Ruang GTK/PMM menggunakan model cepat Groq dan basis pengetahuan RAG.
 
 ---
 
-## 📂 Struktur Berkas Repositori
+## 📲 Interaksi Telegram Bot & Alur Persetujuan Dua Lapis (*Two-Tier Approval*)
 
-```
-fatimah-bot/
-├── SOUL.md                          # Jiwa, Filosofi Kairo, Gaya Tutur, & Batasan Dr. Fatimah
-├── AGENTS.md                        # Aturan Teknis Proyek, Standar Swarm & Kepatuhan Regulasi
-├── USER.md                          # Direktori Profil Pengguna (Kepala Sekolah, Guru, Staf)
-├── MEMORY.md                        # Memori Jangka Panjang Sekolah & Catatan Rapor Pendidikan
-├── README.md                        # Dokumentasi Sistem
-├── .gitignore                       # Filter Berkas Sementara & Kredensial
-├── .env.example                     # Contoh Variabel Lingkungan
-├── config/
-│   └── config.yaml                  # Konfigurasi Teknis Hermes Agent & Tiered Models
-├── profiles/                        # Konfigurasi Sub-Profil Agen Spesialis
-│   ├── tata-usaha/                  # (SOUL.md & AGENTS.md)
-│   ├── kurikulum-guru/              # (SOUL.md & AGENTS.md)
-│   ├── kreator-humas/               # (SOUL.md & AGENTS.md)
-│   ├── sekretaris-rapat/            # (SOUL.md & AGENTS.md)
-│   └── mitra-pegawai/               # (SOUL.md & AGENTS.md)
-└── skills/                          # Katalog Prosedur Sukses (Procedural Memory)
-    ├── triase-dan-orkestrasi/       # Prosedur Triase & QA Dr. Fatimah
-    ├── penjaminan-mutu-modul/       # Standar Audit Kelayakan Modul Ajar
-    └── tata-naskah-dinas/           # Standar Format Surat Permendikbud 3/2021
-```
+Dokumen resmi dan modul ajar dilindungi oleh alur verifikasi dua lapis (*Human-in-the-Loop*):
+1. **Lapis 1 (Audit Mutu Dr. Fatimah):** Memeriksa kepatuhan tata bahasa, keselarasan CP-TP-ATP, dan kelengkapan diferensiasi 3 kelompok murid.
+2. **Lapis 2 (Persetujuan Kepala Sekolah via Telegram):** Bot mengirim draf PDF langsung ke Telegram Kepala Sekolah dengan tombol interaktif:
+   * `[✅ Setujui & Terbitkan]`
+   * `[✏️ Minta Perbaikan]`
+3. Setelah disetujui, dokumen resmi otomatis diteruskan ke guru pemohon tanpa kompresi file.
+
+### Daftar Perintah Cepat Telegram
+* `/start` - Membuka menu layanan Dr. Fatimah.
+* `/modul` - Rancang Modul Ajar SD/MI (Fase Fondasi, A, B, atau C).
+* `/surat` - Buat draf surat undangan parenting / SK panitia.
+* `/notula` - Kirim pesan suara rapat untuk ditranskripsi.
+* `/refleksi_pmm` - Bimbingan refleksi kinerja guru kelas.
+* `/status_kanban` - Pantau progres pekerjaan tim agen.
 
 ---
 
-## ⚡ Strategi Model Berjenjang (*Tiered Hybrid Strategy*)
+## ⚡ Strategi Model Hibrida (*Groq + DeepSeek / OpenRouter + Local Fallback*)
 
-Untuk efisiensi komputasi dan kedaulatan data internal sekolah:
-* **Tier 1 (Penalaran Mendalam & Swarm):** *Nous Hermes 4 (405B / 70B)* atau *Claude Sonnet 4* dengan *Hybrid Reasoning Mode* aktif untuk perancangan kurikulum dan dekomposisi proyek.
-* **Tier 2 (Administrasi & Privasi Lokal):** *Nous Hermes 3 70B / 8B*, *Qwen 3.5*, atau *Gemma 4* lokal (vLLM/Ollama) dengan mode *Non-Reasoning* untuk penomoran surat dan kepatuhan format dinas yang ketat.
-* **Tier 3 (Multimodal & Semantic RAG):** Model embedding **BGE-M3** untuk pemahaman regulasi berbahasa Indonesia, **OpenAI Whisper** untuk transkripsi audio rapat, serta generator gambar/TTS.
+Sistem mengoptimalkan biaya dan latensi:
+* **Kecepatan & Audio:** **Groq API** (`llama-3.3-70b-versatile` & `whisper-large-v3`) untuk transkripsi audio instan dan kepatuhan format persuratan ketat.
+* **Penalaran Mendalam:** **DeepSeek V3 / R1** (via DeepSeek API / OpenRouter) untuk perancangan Modul Ajar SD yang kaya skenario pembelajaran konkret.
+* **Cadangan Lokal (Offline Fallback):** Integrasi **Ollama** (`qwen2.5` / `gemma2`) di VPS jika kuota internet atau API mengalami gangguan.
 
 ---
 
-## 🔒 Tata Kelola & Pengamanan Data (*Security Hardening*)
+## 🔒 Keamanan & Isolasi Kontainer
 
-* Seluruh proses kontainer diisolasi dengan pembatasan hak kernel (`--cap-drop ALL`, `--security-opt no-new-privileges`, `--pids-limit 256`).
-* Kunci rahasia API tersimpan di `~/.hermes/.env` (izin 600).
-* Webhook WhatsApp merespons asinkron (`HTTP 200 OK` dalam `< 1 detik`) guna mencegah *timeout* gateway pesan saat pemrosesan dokumen kompleks.
+* Kontainer dijalankan dengan opsi kernel: `--cap-drop ALL --security-opt no-new-privileges --pids-limit 256`.
+* Kunci rahasia API tersimpan di `~/.hermes/.env` (izin berkas 600).

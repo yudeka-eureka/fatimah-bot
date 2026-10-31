@@ -1,26 +1,26 @@
-# AGENTS.md - Aturan Teknis Agen Kurikulum & Perangkat Ajar
+# AGENTS.md - Aturan Teknis Agen Kurikulum SD/MI
 
 ## 1. Kumpulan Tools & Referensi
-* `skill_manage`: Mengakses katalog prosedur pedagogis `skills/penjaminan-mutu-modul/SKILL.md`.
-* `markdown_to_pdf_docx`: Kompilasi Modul Ajar dan LKPD ke format berkas siap cetak.
-* `filesystem`: Membaca bank Capaian Pembelajaran (CP) Kemendikdasmen per fase (Fase A hingga F).
+* `skill_manage`: Mengakses katalog `skills/penjaminan-mutu-modul/SKILL.md`.
+* `markdown_compiler`: Kompilasi Modul Ajar dan LKPD ke format DOCX/PDF ramah cetak.
+* `filesystem`: Membaca bank Capaian Pembelajaran (CP) Kemendikdasmen untuk Fase Fondasi, Fase A, B, dan C.
 
-## 2. Struktur Standar Modul Ajar Kurikulum Merdeka
+## 2. Struktur Modul Ajar Jenjang SD/MI
 1. **Bagian I: Informasi Umum**
-   * Identitas Sekolah & Penyusun, Alokasi Waktu.
-   * Kompetensi Awal & Dimensi Profil Pelajar Pancasila.
-   * Sarana & Prasarana, Model Pembelajaran (PjBL / PBL / Discovery).
-   * Target Peserta Didik (Reguler, Kesulitan Belajar, Pencapaian Tinggi).
+   * Identitas Sekolah & Penyusun, Fase / Kelas SD.
+   * Alokasi Waktu (Jam Pelajaran SD: 35 menit/JP).
+   * Kompetensi Awal & Dimensi Profil Pelajar Pancasila (Mandiri, Gotong Royong, Bernalar Kritis, Kreatif).
+   * Media & Alat Peraga Konkret (Benda manipulatif, kartu gambar, video pendek).
+   * Target Peserta Didik (3 Kelompok: Perlu Bimbingan, Reguler, Pencapaian Tinggi).
 2. **Bagian II: Komponen Inti**
    * Tujuan Pembelajaran (TP) & Kriteria Ketercapaian (KKTP).
-   * Pemahaman Bermakna & Pertanyaan Pemantik.
-   * Kegiatan Pembelajaran (Pendahuluan, Inti Terdiferensiasi, Penutup).
-   * Asesmen Awal (Diagnostik), Formatif, dan Sumatif.
+   * Pemahaman Bermakna & Pertanyaan Pemantik yang Menstimulasi Rasa Ingin Tahu Anak.
+   * Langkah Pembelajaran:
+     * *Apersepsi & Pemanasan Menyenangkan (Ice Breaking/Lagu Edukatif).*
+     * *Kegiatan Inti Berdiferensiasi (Eksplorasi Konkret, LKPD Bergambar).*
+     * *Refleksi & Penutup (Apresiasi proses belajar).*
+   * Asesmen: Diagnostik Awal, Formatif (Pengamatan & LKPD), dan Sumatif Lingkup Materi.
 3. **Bagian III: Lampiran**
-   * Lembar Kerja Peserta Didik (LKPD).
-   * Pengayaan & Remedial.
-   * Bahan Bacaan Pendidik & Peserta Didik.
-   * Glosarium & Daftar Pustaka.
-
-## 3. Komunikasi Peer
-* Jika Modul Ajar membutuhkan ilustrasi grafis atau infografik sains/matematika, kirimkan permohonan aset ke `kreator-humas` via `hermes peer`.
+   * LKPD Bergambar Siap Cetak (Disertai instruksi ramah anak).
+   * Bahan Bacaan Guru & Siswa.
+   * Rubrik Perkembangan Sikap & Lembar Refleksi Emotikon Anak.
