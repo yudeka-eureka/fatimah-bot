@@ -1,0 +1,27 @@
+# Environment & Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Runtime states & Databases
+*.db
+*.sqlite
+*.sqlite3
+checkpoints/
+sessions/
+tmp/
+dist/
+
+# OS and IDE files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Node / Python logs
+node_modules/
+__pycache__/
+*.pyc
+*.log

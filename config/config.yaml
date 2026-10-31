@@ -1,0 +1,129 @@
+# config.yaml - Konfigurasi Hermes Agent Institusi Pendidikan
+
+system:
+  name: "fatimah-bot-brain"
+  version: "0.21.0-pantheon"
+  timezone: "Asia/Jakarta"
+  default_locale: "id-ID"
+  state_dir: "~/.hermes"
+  checkpoints_dir: "~/.hermes/checkpoints"
+  kanban_dir: "~/.hermes/kanban"
+  skills_dir: "./skills"
+
+orchestrator:
+  root_profile: "pamong-utama"
+  default_operator_name: "Dr. Fatimah"
+  budget_warning_ratio: 0.90
+  max_peer_iterations: 3
+  enable_bot_mode: true
+  enable_swarm: true
+
+# Strategi Model Berjenjang (Tiered Hybrid Model Strategy)
+profiles:
+  pamong-utama:
+    model: "nousresearch/hermes-4-70b"
+    fallback_model: "anthropic/claude-sonnet-4"
+    reasoning_mode: "hybrid"
+    temperature: 0.4
+    context_window: 131072
+    toolsets:
+      - "kanban_create"
+      - "hermes_peer"
+      - "delegate_task"
+      - "gateway_messaging"
+
+  kurikulum-guru:
+    model: "nousresearch/hermes-4-405b"
+    fallback_model: "nousresearch/deephermes-3"
+    reasoning_mode: "true"
+    temperature: 0.6
+    context_window: 131072
+    toolsets:
+      - "skill_manage"
+      - "markdown_compiler"
+      - "filesystem"
+      - "hermes_peer"
+
+  tata-usaha:
+    model: "nousresearch/hermes-3-llama-3.1-70b"
+    fallback_model: "qwen/qwen-2.5-72b-instruct"
+    reasoning_mode: "false" # Non-reasoning untuk kepatuhan skema dan pencegahan overthinking
+    temperature: 0.1
+    context_window: 131072
+    toolsets:
+      - "postgres_mcp"
+      - "sqlite_mcp"
+      - "google_workspace_mcp"
+      - "playwright_headless"
+      - "ripgrep"
+      - "hermes_peer"
+
+  kreator-humas:
+    model: "nousresearch/hermes-4-70b"
+    fallback_model: "nousresearch/hermes-3-70b"
+    reasoning_mode: "hybrid"
+    temperature: 0.7
+    toolsets:
+      - "image_generation"
+      - "tts_synthesis"
+      - "playwright_renderer"
+      - "cron_scheduler"
+      - "hermes_peer"
+
+  sekretaris-rapat:
+    model: "nousresearch/hermes-3-llama-3.1-70b"
+    fallback_model: "groq/llama-3.3-70b-versatile"
+    reasoning_mode: "false"
+    temperature: 0.2
+    context_window: 131072
+    toolsets:
+      - "whisper_stt"
+      - "hermes_kanban"
+      - "google_calendar_mcp"
+      - "hermes_peer"
+
+  mitra-pegawai:
+    model: "nousresearch/hermes-3-llama-3.1-8b"
+    fallback_model: "google/gemma-2-9b-it"
+    reasoning_mode: "false" # Respon cepat <2 detik
+    temperature: 0.3
+    context_window: 65536
+    toolsets:
+      - "bge_m3_vector_retriever"
+      - "sqlite_fts5"
+      - "escalation_dispatcher"
+      - "hermes_peer"
+
+# Penyimpanan Persistensi & Database
+storage:
+  database_type: "postgresql"
+  connection_uri: "${HERMES_DATABASE_URL}"
+  sqlite_state_file: "~/.hermes/state.db"
+  checkpointer: "PostgreSQLCheckpointer"
+  session_persistence: true
+
+# Konfigurasi Gateway Pesan (WhatsApp & Telegram)
+gateway:
+  webhook_port: 8080
+  async_response: true # Segera kirim 200 OK dalam <1s, lanjutkan di background worker
+  channels:
+    whatsapp:
+      provider: "whapi" # atau twilio / wppconnect
+      api_token: "${WHATSAPP_API_TOKEN}"
+      phone_number_id: "${WHATSAPP_PHONE_ID}"
+    telegram:
+      bot_token: "${TELEGRAM_BOT_TOKEN}"
+
+# Pengamanan Kontainer & Sandbox (Security Hardening)
+security:
+  cap_drop_all: true
+  allowed_capabilities:
+    - "DAC_OVERRIDE"
+    - "CHOWN"
+    - "FOWNER"
+  no_new_privileges: true
+  pids_limit: 256
+  tmpfs_mounts:
+    "/tmp": "size=512M"
+    "/var/tmp": "size=256M"
+    "/run": "size=64M"
