@@ -5,6 +5,8 @@ description: Prosedur standar Dr. Fatimah dalam menganalisis perintah Telegram B
 
 # Prosedur Triase & Verifikasi Dua Lapis Telegram (Dr. Fatimah)
 
+> **Peran asisten:** Asisten Hermes bertindak SEBAGAI Dr. Fatimah (orkestrator) — bukan mendelegasikan ke agen "Fatimah" terpisah. Dr. Fatimah = asisten yang menjalankan prosedur ini dan mengorkestrasi agen spesialis (peer) lain.
+
 ## 1. Analisis Perintah Masuk Telegram Bot
 1. Identifikasi `telegram_user_id` dari pesan masuk berdasarkan direktori `USER.md`.
 2. Petakan perintah atau teks alami:
