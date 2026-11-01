@@ -120,7 +120,7 @@ summary += '\n'.join(mcp) if mcp else '(tidak ada blok mcp_servers aktif)'
 summary += '\n'
 with open(os.path.join(outdir, 'mcp_servers.md'), 'w', encoding='utf-8') as f:
     f.write(summary)
-print('redact+mcpsummary ok')
+print('redact+mcpsummary ok', file=sys.stderr)
 PY
 
 # --- 6. Catatan kegiatan harian --------------------------------------------
@@ -214,17 +214,22 @@ body = f"""# Catatan Kegiatan Harian — {date}
 path = os.path.join(repo, 'activity', f'{date}.md')
 with open(path, 'w', encoding='utf-8') as f:
     f.write(body)
-print('activity log:', path)
+print('activity log:', path, file=sys.stderr)
 PY
 
 # --- 7. Commit & push ------------------------------------------------------
 git add -A
+SHA=""
 if git diff --cached --quiet; then
-  echo "tidak ada perubahan — skip commit"
+  echo "Tidak ada perubahan — repositori sudah sinkron."
 else
   git -c user.name="Fatimah" -c user.email="fatimah.62.education@gmail.com" \
       commit -m "chore(daily): auto-sync konfigurasi, skills, MCP & kegiatan ($DATE)" >/dev/null
-  echo "committed"
+  SHA=$(git rev-parse --short HEAD)
 fi
-git push origin main 2>&1 | tail -5
-echo "SYNC SELESAI: $STAMP"
+git push origin main 2>&1 | tail -3
+if [ -n "$SHA" ]; then
+  echo "Sinkronisasi GitHub harian selesai — commit ${SHA} ter-push ke main."
+else
+  echo "Repositori GitHub sudah sinkron (tidak ada perubahan)."
+fi
