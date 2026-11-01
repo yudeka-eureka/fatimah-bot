@@ -28,6 +28,10 @@ WIB=$(TZ=Asia/Jakarta date +"%Y-%m-%d %H:%M WIB")
 
 cd "$REPO"
 
+# --- 0. Arsipkan skrip ini sendiri agar salinan repo ikut ter-update --------
+# (canonical untuk cron ada di /opt/data/scripts/daily-sync.sh)
+cp -f /opt/data/scripts/daily-sync.sh "$REPO/scripts/daily-sync.sh" 2>/dev/null || true
+
 # --- 1. Persona root -------------------------------------------------------
 for f in SOUL.md AGENTS.md MEMORY.md USER.md; do
   if [ -f "$DATA/$f" ]; then
