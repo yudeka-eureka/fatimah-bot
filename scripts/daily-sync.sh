@@ -227,7 +227,7 @@ else
       commit -m "chore(daily): auto-sync konfigurasi, skills, MCP & kegiatan ($DATE)" >/dev/null
   SHA=$(git rev-parse --short HEAD)
 fi
-git push origin main 2>&1 | tail -3
+git push origin main >/dev/null 2>&1
 if [ -n "$SHA" ]; then
   echo "Sinkronisasi GitHub harian selesai — commit ${SHA} ter-push ke main."
 else
