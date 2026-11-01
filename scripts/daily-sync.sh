@@ -164,7 +164,11 @@ try:
         m = re.match(r'^\s+model\s*:\s*"?([^"#\n]+?)"?\s*(?:#.*)?$', ln)
         if m:
             cand = m.group(1).strip()
-            if cand and cand.lower() not in ('base', 'auto', ''):
+            low = cand.lower()
+            is_placeholder = low in ('base', 'auto', '')
+            is_non_llm = any(k in low for k in
+                             ('whisper', 'tts', 'embed', 'transcribe', 'image', 'dall'))
+            if cand and not is_placeholder and not is_non_llm:
                 model = cand
                 break
 except Exception:
