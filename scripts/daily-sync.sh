@@ -145,24 +145,28 @@ skills_sorted = sorted(skills)
 profiles = sorted(d for d in os.listdir(os.path.join(repo, 'profiles'))
                   if os.path.isdir(os.path.join(repo, 'profiles', d)))
 
-# mcp servers
+# mcp servers (hanya nama server tingkat-1: indentasi 2 spasi)
 mcp = []
 try:
     for ln in open(os.path.join(repo, 'config', 'mcp_servers.md'), encoding='utf-8'):
-        m = re.match(r'^\s{2,}([A-Za-z0-9_\-]+)\s*:', ln)
+        m = re.match(r'^  ([A-Za-z0-9_\-]+)\s*:', ln)
         if m:
             mcp.append(m.group(1))
 except Exception:
     pass
 
-# model aktif (dari config.runtime.yaml, baris 'model:')
+# model aktif (lewati komentar & nilai placeholder seperti 'base'/'auto')
 model = ''
 try:
     for ln in open(os.path.join(repo, 'config', 'config.runtime.yaml'), encoding='utf-8'):
-        m = re.match(r'^\s+model\s*:\s*"?([^"#\n]+)"?', ln)
+        if ln.lstrip().startswith('#'):
+            continue
+        m = re.match(r'^\s+model\s*:\s*"?([^"#\n]+?)"?\s*(?:#.*)?$', ln)
         if m:
-            model = m.group(1).strip()
-            break
+            cand = m.group(1).strip()
+            if cand and cand.lower() not in ('base', 'auto', ''):
+                model = cand
+                break
 except Exception:
     pass
 
