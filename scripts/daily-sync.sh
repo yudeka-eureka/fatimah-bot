@@ -15,6 +15,11 @@
 # ============================================================================
 set -euo pipefail
 
+# Kredensial git & gh tinggal di /opt/data/home; cron gateway berjalan dengan
+# HOME=/opt/data sehingga git/gh tidak menemukan configs-nya. Paksa HOME yang
+# benar agar push terotentikasi (semua path data memakai absolut, jadi aman).
+export HOME="/opt/data/home"
+
 REPO="/opt/data/fatimah-bot"
 DATA="/opt/data"
 STAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
