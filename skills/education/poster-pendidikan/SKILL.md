@@ -1,7 +1,7 @@
 ---
 name: poster-pendidikan
 description: Membuat poster pendidikan sekolah bergaya ilustrasi buku anak 2D ceria dengan tata letak terstruktur (pita judul stiker warna-warni, daftar poin kapsul pastel berikon, ilustrasi siswa Indonesia memegang spanduk slogan di depan sekolah, dan pita footer ajakan). Mendukung orientasi landscape dan portrait serta wajib mengajukan pertanyaan penggalian informasi kepada pengguna terlebih dahulu sebelum membuat poster. Gunakan saat pengguna meminta pembuatan poster pendidikan, poster sekolah, poster MPLS, poster edukasi anak/siswa, atau poster pengumuman sekolah.
-allowed-tools: image_gen
+allowed-tools: image_gen, terminal, file
 ---
 
 # Poster Pendidikan
@@ -135,8 +135,40 @@ All Indonesian text must be spelled accurately, crisp, and clearly legible.
 ### 4. Buat Poster dan Sajikan Hasil
 
 1. Susun prompt pembuatan gambar secara mendetail dengan memasukkan seluruh teks yang telah disepakati pengguna persis kata demi kata.
-2. Panggil tool `image_gen:generate_image` dengan parameter `aspect_ratio` yang sesuai (`16:9` atau `4:3` untuk Landscape; `3:4` atau `4:5` untuk Portrait).
+2. Panggil tool `image_gen:generate_image` dengan parameter `aspect_ratio` yang sesuai (`16:9` atau `4:3` untuk Landscape; `3:4` atau `4:5` untuk Portrait) — ini jalur FLUX yang butuh provider terkonfigurasi. Tanpa FLUX, pakai **Canva MCP** (bagian berikutnya) atau **HTML/CSS → PNG** (bagian "Render Tanpa FLUX").
 3. Tampilkan hasil gambar poster kepada pengguna menggunakan format gambar markdown standar, lalu tawarkan apakah ada bagian teks, warna, atau ikon yang ingin direvisi.
+
+## Render Tanpa FLUX (HTML/CSS → PNG via Chromium headless)
+
+Metode utama saat `image_gen`/FLUX tidak dikonfigurasi — dan sebenarnya lebih baik untuk poster ber-teks karena ejaan dijamin akurat, warna/layout presisi, deterministik, tanpa API key. Struktur visual (pita judul, kotak kapsul pastel, footer) diwujudkan sebagai HTML+CSS; ilustrasi (matahari, gedung, siswa, ikon) digambar sebagai SVG inline, bukan emoji.
+
+1. Salin `templates/poster-landscape.html` lalu ganti token placeholder — `[TEKS_PITA_ATAS]`, `[JUDUL_UTAMA]`, `[TEKS_PENGANTAR_POIN]`, `[POIN_1]`..`[POIN_4]`, `[TEKS_SLOGAN_SPANDUK]`, `[TEKS_KALIMAT_PENUTUP]`, `[TEKS_LENCANA_BAWAH]` — dengan teks yang sudah disepakati di Langkah 1.
+2. Render dengan Chromium headless (binary sudah ada di lingkungan):
+   ```bash
+   CHROME=/opt/hermes/tools/chromium-1208/chrome-linux64/chrome
+   "$CHROME" --headless --disable-gpu --no-sandbox --hide-scrollbars \
+     --screenshot=poster.png --window-size=1600,900 \
+     "file:///absolute/path/poster.html"
+   ```
+   `--window-size` mengikuti rasio: `1600,900` untuk landscape 16:9, `1200,1600` untuk portrait 3:4. Gunakan path `file://` absolut. Log `ERROR:dbus`/`Failed to connect to the bus` di headless adalah noise yang bisa diabaikan.
+3. Verifikasi PNG valid & ukurannya: `run-in-hermes-env python3 -c "from PIL import Image; im=Image.open('poster.png'); print(im.size)"`.
+4. Kirim via baris `MEDIA:` dan tawarkan revisi (ganti teks → render ulang, hitungan detik).
+
+Pitfall render-kode:
+- **Emoji jadi kotak/tofu** bila font emoji tidak terpasang (umum di container Linux headless tanpa `fonts-noto-color-emoji`). Jangan pakai emoji untuk ikon/karakter — gambar sebagai SVG inline (crisp, bisa diwarnai, tanpa ketergantungan font).
+- **Web font tidak termuat otomatis** tanpa `<link>`/`@import`; font sistem hanya DejaVu Sans dkk. Muat Google Fonts (Baloo 2 / Fredoka) lewat `<link>` untuk tampilan bulat; fallback ke sans-serif bila offline.
+- **Logo/foto dari web sering berlatar putih** — bila disematkan via `<img>` akan tampil sebagai kotak putih di atas latar berwarna. Buang latar putih dulu dengan flood-fill dari tepi (PIL, threshold ~240) menjadi alpha transparan, baru simpan sebagai PNG transparan.
+
+## Membuat dengan Canva MCP
+
+Jalur ketiga: Canva MCP. Cocok untuk poster webinar/pengumuman/rapat yang butuh template profesional & bisa diedit di Canva, bukan ilustrasi anak. Hasilnya ada di akun Canva pengguna (`edit_url`), sekaligus bisa diekspor PNG untuk ditampilkan di chat.
+
+1. Pastikan `canva_mcp` terhubung (`manage_connections status` → `connected:true`; kalau belum, `action=connect connectors=["canva_mcp"]`).
+2. `GENERATE_DESIGN` (query rinci + `design_type:"poster"`) → kembalikan `job_id` + daftar kandidat (`candidate_id`).
+3. `CREATE_DESIGN_FROM_CANDIDATE` (job_id + candidate_id) → `design_id` + `urls.edit_url`.
+4. Untuk menampilkan ke pengguna, EKSPOR & unduh PNG lalu kirim `MEDIA:` — thumbnail Canva tidak bisa di-hotlink (lihat `references/canva-mcp.md`).
+
+Alur lengkap + pitfall (koneksi hosted connector, thumbnail Cloudflare, wajib `GET_EXPORT_FORMATS` dulu, orientasi bisa melenceng): lihat `references/canva-mcp.md`.
 
 ## Gotchas
 

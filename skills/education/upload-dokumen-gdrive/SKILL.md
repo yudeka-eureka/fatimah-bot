@@ -1,9 +1,11 @@
 ---
 name: upload-dokumen-gdrive
-description: Use when uploading finished documents to Google Drive.
+description: Use when uploading created/downloaded files to Google Drive.
 ---
 
 # Upload Dokumen ke Google Drive (Dr. Fatimah)
+
+**ATURAN TETAP user:** setiap berkas yang dibuat/diunduh (jurnal, PDF, dokumen, dll.) WAJIB diarsipkan ke Google Drive dan tautannya (`webViewLink`) dilaporkan ke user — bukan hanya dokumen dinas yang lolos audit.
 
 Dipanggil SETELAH dokumen selesai disusun dan lolos audit mutu Lapis 1. Tujuannya: arsip terpusat + tautan distribusi ke guru/Kepala Sekolah.
 
@@ -19,7 +21,9 @@ GAPI="/opt/hermes/scripts/run-in-hermes-env python3 /opt/data/skills/productivit
 ## Struktur folder (sudah dibuat)
 - Root: `Fatimah Bot - Dokumen` → id `1bRM5qS8BjDiKtvQ8Lvrp7pwUMNmtjN1j`
   - `Kurikulum & Modul Ajar` → id `1syz8pqJRrrlERhuLaNfEMQpyBK4_3tP8`
-  - (buat subfolder lain sesuai jenis bila belum ada: `Surat Dinas`, `Notula Rapat`, `Poster & Humas`)
+  - `Jurnal Ilmiah` → id `1nFCD0EWOMYyEDyLetq-L8entC57wNdEz`
+  - `Poster & Humas` → id `1H1li_7k45HmDpN7jegqGCu5VQ1qult68`
+  - (buat subfolder lain sesuai jenis bila belum ada: `Surat Dinas`, `Notula Rapat`)
 
 ## Alur
 1. Tentukan folder tujuan (cari dulu, buat kalau belum ada).

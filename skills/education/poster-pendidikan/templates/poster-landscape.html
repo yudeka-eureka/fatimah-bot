@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<!--
+  Template poster pendidikan LANSCAPE (16:9 = 1600x900).
+  Cara pakai: salin file ini, ganti SEMUA token [BRACKET] dengan teks final,
+  lalu render:
+    CHROME=/opt/hermes/tools/chromium-1208/chrome-linux64/chrome
+    "$CHROME" --headless --disable-gpu --no-sandbox --hide-scrollbars \
+      --screenshot=poster.png --window-size=1600,900 \
+      "file:///ABS/PATH/poster-landscape.html"
+  Token: [TEKS_PITA_ATAS] [JUDUL_UTAMA] [TEKS_PENGANTAR_POIN]
+         [POIN_1..4] [TEKS_SLOGAN_SPANDUK] [TEKS_KALIMAT_PENUTUP] [TEKS_LENCANA_BAWAH]
+  JANGAN pakai emoji (jadi tofu) — ikon/ilustrasi sudah berupa SVG inline.
+-->
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1600px;height:900px;overflow:hidden}
+  body{font-family:"DejaVu Sans","Arial",sans-serif;
+    background:linear-gradient(180deg,#6ec6ff 0%,#a9e1ff 48%,#cdeffd 72%);position:relative}
+  .sun{position:absolute;top:34px;right:66px;width:118px;height:118px;background:#FFD54F;border-radius:50%;box-shadow:0 0 42px #FFE082}
+  .sun svg{position:absolute;inset:0}
+  .cloud{position:absolute;background:#fff;border-radius:60px}
+  .c1{top:58px;left:84px;width:190px;height:56px}
+  .c1:before,.c2:before{content:"";position:absolute;background:#fff;border-radius:50%}
+  .c1:before{width:76px;height:76px;top:-34px;left:34px}
+  .c2{top:150px;left:340px;width:130px;height:40px}
+  .c2:before{width:52px;height:52px;top:-24px;left:26px}
+  .wrap{position:relative;width:100%;height:100%;display:flex;flex-direction:column;padding-bottom:150px}
+  .ribbon-top{margin:30px auto 0;background:#1B3B6F;color:#fff;font-weight:800;font-size:33px;
+    letter-spacing:1px;padding:10px 46px;border-radius:40px;text-transform:uppercase}
+  .title{text-align:center;margin-top:6px;font-weight:900;font-size:118px;line-height:1;
+    -webkit-text-stroke:4px #fff;text-shadow:3px 4px 0 rgba(0,0,0,.12);
+    background:linear-gradient(90deg,#1565C0,#2E7D32,#EF6C00,#7B1FA2,#C62828);
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .ribbon-sub{margin:12px auto 0;background:#EC407A;color:#fff;font-weight:700;font-size:29px;
+    padding:10px 34px;border-radius:40px}
+  .content{display:flex;gap:28px;padding:26px 56px 0;align-items:stretch;flex:1}
+  .pills{flex:1 1 52%;display:flex;flex-direction:column;gap:16px;justify-content:center}
+  .pill{display:flex;align-items:center;gap:18px;border:6px solid #fff;border-radius:999px;
+    padding:10px 26px;font-weight:800;font-size:38px;color:#1B3B6F;box-shadow:0 6px 14px rgba(0,0,0,.10)}
+  .pill .ico{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .pill .ico svg{width:40px;height:40px}
+  .p1{background:#FFF3B0}.p1 .ico{background:#FFD54F}
+  .p2{background:#DCEDC8}.p2 .ico{background:#9CCC65}
+  .p3{background:#B3E5FC}.p3 .ico{background:#4FC3F7}
+  .p4{background:#E1BEE7}.p4 .ico{background:#F06292}
+  .scene{flex:1 1 48%;position:relative}
+  .school{position:absolute;right:36px;top:4px;width:280px;height:196px;background:#FFF3E0;
+    border:5px solid #8D6E63;border-radius:8px}
+  .school .roof{position:absolute;top:-44px;left:-12px;width:304px;height:50px;background:#FB8C00;border-radius:8px}
+  .school .clock{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:46px;height:46px;
+    background:#fff;border:4px solid #5D4037;border-radius:50%}
+  .school .clock svg{width:100%;height:100%}
+  .school .sign{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);
+    background:#1B3B6F;color:#fff;font-weight:800;font-size:21px;padding:6px 20px;border-radius:6px}
+  .flag{position:absolute;right:-64px;top:0;width:6px;height:148px;background:#999}
+  .flag:before{content:"";position:absolute;top:0;left:6px;width:70px;height:42px;
+    background:linear-gradient(180deg,#D32F2F 50%,#fff 50%)}
+  .students{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:flex-end;justify-content:center;gap:6px}
+  .banner{display:flex;flex-direction:column;align-items:center;background:#fff;
+    border:4px solid #E0E0E0;border-radius:14px;padding:10px 22px;box-shadow:0 6px 14px rgba(0,0,0,.12)}
+  .banner .s1{color:#1565C0;font-weight:900;font-size:33px}
+  .banner .s2{color:#EC407A;font-weight:900;font-size:29px}
+  .footer{position:absolute;left:0;right:0;bottom:0;height:150px;background:#16325C}
+  .footer:before{content:"";position:absolute;top:-42px;left:0;right:0;height:46px;
+    background:#16325C;border-radius:50% 50% 0 0/100% 100% 0 0}
+  .footer .msg{position:absolute;left:56px;top:38px;color:#fff;font-weight:800;font-size:25px;max-width:880px}
+  .badge{position:absolute;right:56px;top:24px;background:#fff;border:4px dashed #FFD54F;border-radius:14px;padding:12px 22px;text-align:center}
+  .badge .b1{color:#C62828;font-weight:900;font-size:26px}
+  .badge .b2{color:#1B3B6F;font-weight:800;font-size:23px}
+</style>
+</head>
+<body>
+  <div class="sun"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="22" fill="#F9A825"/><circle cx="41" cy="46" r="3" fill="#5D4037"/><circle cx="59" cy="46" r="3" fill="#5D4037"/><path d="M40 56 Q50 66 60 56" stroke="#5D4037" stroke-width="3" fill="none" stroke-linecap="round"/></svg></div>
+  <div class="cloud c1"></div><div class="cloud c2"></div>
+
+  <div class="wrap">
+    <div class="ribbon-top">[TEKS_PITA_ATAS]</div>
+    <div class="title">[JUDUL_UTAMA]</div>
+    <div class="ribbon-sub">[TEKS_PENGANTAR_POIN]</div>
+
+    <div class="content">
+      <div class="pills">
+        <div class="pill p1"><div class="ico"><svg viewBox="0 0 24 24" fill="#5D4037"><circle cx="12" cy="12" r="9" fill="#FFF"/><circle cx="9" cy="10" r="1.6"/><circle cx="15" cy="10" r="1.6"/><path d="M8.5 14 Q12 17 15.5 14" stroke="#5D4037" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></div> [POIN_1]</div>
+        <div class="pill p2"><div class="ico"><svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2l7 3v6c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V5z"/><path d="M8.5 12l2.5 2.5 4.5-4.5" stroke="#2E7D32" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div> [POIN_2]</div>
+        <div class="pill p3"><div class="ico"><svg viewBox="0 0 24 24" fill="#fff"><path d="M4 6h16v12H4z"/><path d="M4 6l8 7 8-7" stroke="#1565C0" stroke-width="1.4" fill="none"/><path d="M4 6h7M17 6h3" stroke="#1565C0" stroke-width="1.4"/></svg></div> [POIN_3]</div>
+        <div class="pill p4"><div class="ico"><svg viewBox="0 0 24 24" fill="#C62828"><path d="M12 21s-7-4.5-9-9c-1.4-3.2 1-6.5 4.5-6.5 2 0 3.4 1.2 4.5 2.8 1.1-1.6 2.5-2.8 4.5-2.8 3.5 0 5.9 3.3 4.5 6.5-2 4.5-9 9-9 9z"/></svg></div> [POIN_4]</div>
+      </div>
+
+      <div class="scene">
+        <div class="school"><div class="roof"></div><div class="clock"><svg viewBox="0 0 46 46"><circle cx="23" cy="23" r="20" fill="none" stroke="#5D4037" stroke-width="3"/><path d="M23 13v10l7 4" stroke="#5D4037" stroke-width="3" fill="none" stroke-linecap="round"/></svg></div><div class="sign">SEKOLAH</div></div>
+        <div class="flag"></div>
+        <div class="students">
+          <svg width="150" height="170" viewBox="0 0 150 170"><circle cx="75" cy="52" r="30" fill="#F6C99C"/><circle cx="63" cy="48" r="3" fill="#3E2723"/><circle cx="87" cy="48" r="3" fill="#3E2723"/><path d="M66 62 Q75 72 84 62" stroke="#3E2723" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M45 78 q-8 30 -6 60 h-24 v-60 z" fill="#1565C0"/><path d="M75 78 q8 30 6 60 h24 v-60 z" fill="#1565C0"/><rect x="52" y="78" width="46" height="14" fill="#1565C0" rx="4"/></svg>
+          <div class="banner"><span class="s1">[TEKS_SLOGAN_SPANDUK]</span></div>
+          <svg width="150" height="170" viewBox="0 0 150 170"><circle cx="75" cy="52" r="30" fill="#E0A87C"/><circle cx="63" cy="48" r="3" fill="#3E2723"/><circle cx="87" cy="48" r="3" fill="#3E2723"/><path d="M66 62 Q75 72 84 62" stroke="#3E2723" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M45 78 q-8 30 -6 60 h-24 v-60 z" fill="#fff"/><path d="M75 78 q8 30 6 60 h24 v-60 z" fill="#C62828"/><rect x="52" y="78" width="46" height="14" fill="#C62828" rx="4"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="msg">[TEKS_KALIMAT_PENUTUP]</div>
+    <div class="badge"><div class="b1">[TEKS_LENCANA_BAWAH]</div></div>
+  </div>
+</body>
+</html>
