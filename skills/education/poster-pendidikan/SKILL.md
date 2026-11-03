@@ -13,6 +13,7 @@ Skill ini menghasilkan desain poster pendidikan bergaya ilustrasi kartun 2D rama
 - Pengguna meminta pembuatan poster pendidikan, poster sekolah, poster kelas, atau poster kegiatan siswa (seperti MPLS, gerakan sekolah sehat, anti-perundungan, tata tertib, atau literasi).
 - Pengguna menginginkan poster bergaya ilustrasi anak/sekolah Indonesia yang ceria dengan daftar poin berikon dan karakter siswa memegang spanduk.
 - Pengguna membutuhkan poster edukasi dalam ukuran mendatar (landscape) atau tegak (portrait).
+- Pengguna meminta poster ayat Al-Qur'an / kaligrafi / teks Arab (poster Islami) — pakai jalur HTML/CSS → PNG dengan font Arab lokal, bukan ilustrasi anak (lihat `references/render-teks-arab.md`).
 
 ## Steps
 
@@ -140,7 +141,7 @@ All Indonesian text must be spelled accurately, crisp, and clearly legible.
 
 ## Render Tanpa FLUX (HTML/CSS → PNG via Chromium headless)
 
-Metode utama saat `image_gen`/FLUX tidak dikonfigurasi — dan sebenarnya lebih baik untuk poster ber-teks karena ejaan dijamin akurat, warna/layout presisi, deterministik, tanpa API key. Struktur visual (pita judul, kotak kapsul pastel, footer) diwujudkan sebagai HTML+CSS; ilustrasi (matahari, gedung, siswa, ikon) digambar sebagai SVG inline, bukan emoji.
+Metode fallback (BUKAN default — user pilih Canva MCP), dipakai saat Canva tak tersedia atau butuh teks presisi. Juga saat `image_gen`/FLUX tidak dikonfigurasi — dan sebenarnya lebih baik untuk poster ber-teks karena ejaan dijamin akurat, warna/layout presisi, deterministik, tanpa API key. Struktur visual (pita judul, kotak kapsul pastel, footer) diwujudkan sebagai HTML+CSS; ilustrasi (matahari, gedung, siswa, ikon) digambar sebagai SVG inline, bukan emoji.
 
 1. Salin `templates/poster-landscape.html` lalu ganti token placeholder — `[TEKS_PITA_ATAS]`, `[JUDUL_UTAMA]`, `[TEKS_PENGANTAR_POIN]`, `[POIN_1]`..`[POIN_4]`, `[TEKS_SLOGAN_SPANDUK]`, `[TEKS_KALIMAT_PENUTUP]`, `[TEKS_LENCANA_BAWAH]` — dengan teks yang sudah disepakati di Langkah 1.
 2. Render dengan Chromium headless (binary sudah ada di lingkungan):
@@ -158,10 +159,17 @@ Pitfall render-kode:
 - **Emoji jadi kotak/tofu** bila font emoji tidak terpasang (umum di container Linux headless tanpa `fonts-noto-color-emoji`). Jangan pakai emoji untuk ikon/karakter — gambar sebagai SVG inline (crisp, bisa diwarnai, tanpa ketergantungan font).
 - **Web font tidak termuat otomatis** tanpa `<link>`/`@import`; font sistem hanya DejaVu Sans dkk. Muat Google Fonts (Baloo 2 / Fredoka) lewat `<link>` untuk tampilan bulat; fallback ke sans-serif bila offline.
 - **Logo/foto dari web sering berlatar putih** — bila disematkan via `<img>` akan tampil sebagai kotak putih di atas latar berwarna. Buang latar putih dulu dengan flood-fill dari tepi (PIL, threshold ~240) menjadi alpha transparan, baru simpan sebagai PNG transparan.
+- **Teks Arab jadi tofu (□)** — container headless tidak punya font Arab; unduh woff2 Amiri/Poppins lokal + `@font-face` via `file://` + `direction:rtl` untuk kaligrafi/ayat. Resep lengkap: `references/render-teks-arab.md`.
 
 ## Membuat dengan Canva MCP
 
-Jalur ketiga: Canva MCP. Cocok untuk poster webinar/pengumuman/rapat yang butuh template profesional & bisa diedit di Canva, bukan ilustrasi anak. Hasilnya ada di akun Canva pengguna (`edit_url`), sekaligus bisa diekspor PNG untuk ditampilkan di chat.
+**Alat desain yang DIPILIH user** — user menolak ngoding HTML/CSS manual untuk desain ("jangan ngoding sendiri"), jadi pakai Canva MCP sebagai jalur utama. Cocok untuk poster webinar/pengumuman/rapat yang butuh template profesional & bisa diedit di Canva.
+
+**ALUR DEFAULT (preferensi user) — kirim PREVIEW + link, JANGAN ekspor PNG sendiri:** `EXPORT_DESIGN` sering ditolak ("Not allowed to access design") untuk desain AI yang belum dibuka/disimpan di editor Canva (`design_type` masih "unknown", tanda `disableexport=T`). Yang dilakukan:
+1. `GENERATE_DESIGN` → `CREATE_DESIGN_FROM_CANDIDATE` → dapat `design_id` + `edit_url`.
+2. Ambil PREVIEW: `GET_DESIGN` (design_id) → `thumbnail.url` (atau `fallback` S3 `document-export.canva.com/...`) — unduh PNG preview lalu kirim `MEDIA:` ke user.
+3. Kirim juga link Canva `edit_url` ke user.
+4. Bila user perlu akses/buka di Canva: minta login dengan akun `fatimah.62.education@gmail.com`. Canva mengirim kode verifikasi ke Gmail — baca lewat `google_api.py` (gmail) lalu sampaikan kodenya ke user.
 
 1. Pastikan `canva_mcp` terhubung (`manage_connections status` → `connected:true`; kalau belum, `action=connect connectors=["canva_mcp"]`).
 2. `GENERATE_DESIGN` (query rinci + `design_type:"poster"`) → kembalikan `job_id` + daftar kandidat (`candidate_id`).

@@ -12,6 +12,11 @@ Membuat desain (poster/flyer/presentasi/dokumen) lewat Canva MCP dan menampilkan
 2. `CREATE_DESIGN_FROM_CANDIDATE` (`job_id` + `candidate_id`) → `design_summary.id` (design_id, awalan "D", 11 karakter) + `urls.edit_url` + `view_url`.
 3. Menampilkan ke pengguna: ekspor & unduh PNG (bawah), kirim via `MEDIA:`.
 
+## Menyisipkan logo/gambar (aset)
+- `UPLOAD_ASSET_FROM_URL` (`url` + `name`) → `asset.id` (awalan "M"). HANYA menerima URL publik; DILARANG meng-upload file lokal/private milik user ke hosting publik demi membuat URL — minta URL publik dari user, atau arahkan user unggah langsung ke Canva.
+- Sisipkan aset ke desain baru via parameter `asset_ids` di `GENERATE_DESIGN` (aset dimasukkan sesuai urutan; kirim hanya aset yang memang dipakai).
+- Logo/foto dari user sering berlatar putih — bila perlu tampil bersih di atas latar berwarna, buang latar putih dulu (flood-fill dari tepi → alpha transparan) sebelum dipakai.
+
 ## Menampilkan desain sebagai gambar (WAJIB ekspor)
 - **Thumbnail `design.canva.ai/*` TIDAK bisa di-hotlink** — mengembalikan halaman "Client Challenge" Cloudflare (HTML), bukan gambar. Jangan kirim `![alt](thumbnail_url)`.
 - `GET_EXPORT_FORMATS` (design_id) dulu — jangan menebak format; poster/flyer mendukung png/jpg/pdf.
@@ -21,3 +26,4 @@ Membuat desain (poster/flyer/presentasi/dokumen) lewat Canva MCP dan menampilkan
 - Poster hasil `GENERATE_DESIGN` bisa keluar **portrait** walau query minta landscape — sebutkan orientasi aktual saat menyajikan, tawarkan regenerasi.
 - `GENERATE_DESIGN` tidak membawa konteks percakapan sebelumnya — ulangi semua detail (gaya, teks, warna) di `query` tiap iterasi.
 - Tiap desain yang dibuat jadi tersimpan di akun Canva pengguna — jangan buat semua kandidat tanpa konfirmasi bila ragu; buat satu dulu, tawarkan kandidat lain.
+- `EXPORT_DESIGN` bisa mengembalikan `PROVIDER_ERROR: ... Not allowed to access design with id <design_id>` untuk desain hasil `GENERATE_DESIGN` — `GET_EXPORT_FORMATS` tetap sukses (mengembalikan daftar format generik), tapi ekspor ditolak karena izin akses ekspor tidak tersedia (bukan soal format). Jangan ulang ekspor lebih dari sekali; alihkan ke HTML/CSS → PNG (lihat `references/render-teks-arab.md` untuk teks Arab) dan berikan `edit_url` Canva sebagai opsi edit manual.

@@ -2257,6 +2257,14 @@ display:
 #     shared-metrics directory resets it.
 # See docs/observability/relay-shared-metrics.md (Appendix A) for the full
 # consent, identity, retention, and deletion decisions.
+  platforms:
+    whatsapp:
+      tool_progress: false
+      long_running_notifications: false
+      interim_assistant_messages: false
+      busy_ack_detail: false
+      show_reasoning: false
+      suppress_warning_notifications: true
 telemetry:
   shared_metrics:
     enabled: false
@@ -2461,6 +2469,15 @@ platforms:
       chat_id: '407650102'
       name: Yatno Sudar
       user_id: '407650102'
+  whatsapp:
+    enabled: true
+    home_channel:
+      platform: whatsapp
+      chat_id: 202194242560203@lid
+      name: Sudaryatno🇵🇸🇮🇩
+      user_id: 6281315566687@s.whatsapp.net
+  webhook:
+    enabled: true
 command_allowlist:
   - overwrite project env/config via redirection
 auxiliary:

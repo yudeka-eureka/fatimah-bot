@@ -46,6 +46,28 @@ $GAPI drive upload /path/file.docx --name "Nama Dokumen.docx" --parent FOLDER_ID
 $GAPI drive get FILE_ID
 ```
 
+## Mengonversi .docx menjadi Google Doc (bisa diedit)
+
+`drive upload` menyimpan `.docx` sebagai file Word, bukan Google Doc. Untuk menghasilkan Google Doc asli yang bisa diedit online, unggah `.docx` lewat Drive API dengan `mimeType: application/vnd.google-apps.document` pada metadata (memicu konversi impor; tabel, heading, dan bullet ikut terkonversi). Jalankan lewat `run-in-hermes-env`:
+
+```python
+import sys
+sys.path.insert(0, "/opt/data/skills/productivity/google-workspace/scripts")
+from google_api import build_service
+from googleapiclient.http import MediaFileUpload
+
+service = build_service("drive", "v3")
+media = MediaFileUpload("dok.docx",
+    mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    resumable=True)
+metadata = {"name": "Nama Dok", "mimeType": "application/vnd.google-apps.document",
+            "parents": [FOLDER_ID]}
+res = service.files().create(body=metadata, media_body=media,
+    fields="id, name, mimeType, webViewLink").execute()
+```
+
+Verifikasi: `mimeType` hasil harus `application/vnd.google-apps.document` dan `webViewLink` berawal `https://docs.google.com/document/.../edit`. Buat `.docx`-nya pakai `python-docx` agar tabel & heading tersusun rapi sebelum dikonversi.
+
 ## Aturan
 - Jangan upload ulang file yang sama — `drive search` nama file dulu; bila sudah ada, tanya user (timpa atau versi baru).
 - Kembalikan `webViewLink` (bukan sekadar file ID) ke user.
@@ -54,4 +76,4 @@ $GAPI drive get FILE_ID
 ## Pitfall
 - Output GAPI selalu JSON; ambil field `id` dan `webViewLink`.
 - Nama file: pakai spasi biasa aman, tapi hindari karakter `&` di SHELL (quote argumen) — nama dengan `&` seperti `Kurikulum & Modul Ajar` harus di-quote.
-- Upload `.docx` otomatis jadi Google Doc (bisa diedit online); kalau mau file mentah utuh, pertimbangkan `.pdf`.
+- `drive upload` `.docx` TIDAK otomatis jadi Google Doc — ia menyimpan file Word apa adanya. Bila perlu dokumen yang bisa diedit online, pakai konversi pada bagian di bawah.

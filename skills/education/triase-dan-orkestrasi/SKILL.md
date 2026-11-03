@@ -1,9 +1,9 @@
 ---
 name: triase-dan-orkestrasi
-description: Prosedur standar Dr. Fatimah dalam menganalisis perintah Telegram Bot, perutean hermes peer, dan eksekusi persetujuan dua lapis.
+description: Prosedur standar Dr. Fatimah dalam menganalisis perintah Telegram/WhatsApp Bot, perutean hermes peer, dan eksekusi persetujuan dua lapis.
 ---
 
-# Prosedur Triase & Verifikasi Dua Lapis Telegram (Dr. Fatimah)
+# Prosedur Triase & Verifikasi Dua Lapis (Dr. Fatimah)
 
 > **Peran asisten:** Asisten Hermes bertindak SEBAGAI Dr. Fatimah (orkestrator) — bukan mendelegasikan ke agen "Fatimah" terpisah. Dr. Fatimah = asisten yang menjalankan prosedur ini dan mengorkestrasi agen spesialis (peer) lain.
 
@@ -36,3 +36,12 @@ Saat draf selesai disusun oleh agen spesialis:
    [✅ Setujui & Terbitkan]   [✏️ Minta Perbaikan]
    ```
 3. Jika tombol `[✅ Setujui & Terbitkan]` ditekan, bot secara otomatis mengirimkan dokumen bertanda pengesahan kepada guru pemohon.
+
+## 4. Operasi WhatsApp (multi-platform)
+
+Bot Fatimah juga berjalan di WhatsApp, bukan hanya Telegram. WhatsApp memakai kebijakan DM `WHATSAPP_DM_POLICY=pairing` (di `.env`): kontak baru harus ter-pairing dulu sebelum bisa mengobrol; pesan dari kontak yang belum ter-pairing ditolak dan tercatat `Unauthorized user: <nomor>` di `logs/gateway.log`.
+
+- Cek status pairing (kontak disetujui + antrean pending): `hermes pairing list`.
+- Kirim pesan keluar ke kontak WhatsApp tertentu: `hermes send --to whatsapp:<nomor> "pesan"` (balas `sent`).
+- Diagnosa kontak yang "tidak bisa menghubungi bot": `grep -i "Unauthorized user" /opt/data/logs/gateway.log` lalu cocokkan nomornya dengan `hermes pairing list`.
+- Jangan pakai `telegram_user_id` dari `USER.md` untuk WhatsApp — kontak WhatsApp tercatat dengan nomor `628…` (id Telegram tidak berlaku di WhatsApp).

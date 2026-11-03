@@ -23,6 +23,25 @@ Full reference: https://hermes-agent.nousresearch.com/docs/user-guide/configurat
 
 `hermes config check` reports sections missing from an older config.
 
+### Per-platform display (hide tool progress / logs)
+
+To make a messaging platform "quiet" (no tool breadcrumbs, no "⏳ Working — N min" heartbeat, only the final answer), set keys under `display.platforms.<platform>` — e.g. WhatsApp:
+
+```bash
+hermes config set display.platforms.whatsapp.tool_progress '"off"'   # enum string — QUOTE it (see below)
+hermes config set display.platforms.whatsapp.long_running_notifications false
+hermes config set display.platforms.whatsapp.interim_assistant_messages false
+hermes config set display.platforms.whatsapp.busy_ack_detail false
+hermes config set display.platforms.whatsapp.show_reasoning false
+hermes config set display.platforms.whatsapp.suppress_warning_notifications true
+```
+
+Keys: `tool_progress` (off/new/all/verbose/log), `long_running_notifications`, `interim_assistant_messages`, `busy_ack_detail`, `show_reasoning`, `suppress_warning_notifications`, `cleanup_progress`.
+
+Pitfalls:
+- `hermes config set` coerces bare `off`/`on`/`true`/`false` to booleans (YAML 1.1), BUT the gateway normaliser (`_norm_tristate` in `gateway/display_config.py`) maps boolean `False` → `"off"` and `True` → `"all"`, so for `tool_progress` bare `off` is CORRECT (`hermes config set ... tool_progress off` → `false` → `off`). Do NOT quote it: `'"off"'` stores the literal string `"off"` (with quotes), which the normaliser does not recognise and silently falls back to `all`.
+- Display settings are resolved per turn from `load_user_config_effective()` (mtime-cached), so `display.platforms.<plat>.*` edits apply on the NEXT message without a gateway restart in practice. If a stale value persists, restart from a separate shell: `hermes gateway restart` is BLOCKED from inside the gateway (it would SIGTERM its own child turns).
+
 ### Toolsets
 
 Enable/disable via `hermes tools` (interactive) or `hermes tools enable/disable NAME`.
