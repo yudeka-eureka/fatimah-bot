@@ -2259,12 +2259,13 @@ display:
 # consent, identity, retention, and deletion decisions.
   platforms:
     whatsapp:
-      tool_progress: false
+      tool_progress: "off"
       long_running_notifications: false
       interim_assistant_messages: false
       busy_ack_detail: false
       show_reasoning: false
       suppress_warning_notifications: true
+  memory_notifications: "off"
 telemetry:
   shared_metrics:
     enabled: false

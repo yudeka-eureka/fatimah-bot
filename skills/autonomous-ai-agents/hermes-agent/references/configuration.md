@@ -28,12 +28,13 @@ Full reference: https://hermes-agent.nousresearch.com/docs/user-guide/configurat
 To make a messaging platform "quiet" (no tool breadcrumbs, no "⏳ Working — N min" heartbeat, only the final answer), set keys under `display.platforms.<platform>` — e.g. WhatsApp:
 
 ```bash
-hermes config set display.platforms.whatsapp.tool_progress '"off"'   # enum string — QUOTE it (see below)
+hermes config set display.platforms.whatsapp.tool_progress off   # bare "off" → boolean false → normaliser maps to "off"
 hermes config set display.platforms.whatsapp.long_running_notifications false
 hermes config set display.platforms.whatsapp.interim_assistant_messages false
 hermes config set display.platforms.whatsapp.busy_ack_detail false
 hermes config set display.platforms.whatsapp.show_reasoning false
 hermes config set display.platforms.whatsapp.suppress_warning_notifications true
+hermes config set display.memory_notifications off   # GLOBAL (not per-platform) — silences "💾 Self-improvement review"/"Memory updated"
 ```
 
 Keys: `tool_progress` (off/new/all/verbose/log), `long_running_notifications`, `interim_assistant_messages`, `busy_ack_detail`, `show_reasoning`, `suppress_warning_notifications`, `cleanup_progress`.
@@ -41,6 +42,7 @@ Keys: `tool_progress` (off/new/all/verbose/log), `long_running_notifications`, `
 Pitfalls:
 - `hermes config set` coerces bare `off`/`on`/`true`/`false` to booleans (YAML 1.1), BUT the gateway normaliser (`_norm_tristate` in `gateway/display_config.py`) maps boolean `False` → `"off"` and `True` → `"all"`, so for `tool_progress` bare `off` is CORRECT (`hermes config set ... tool_progress off` → `false` → `off`). Do NOT quote it: `'"off"'` stores the literal string `"off"` (with quotes), which the normaliser does not recognise and silently falls back to `all`.
 - Display settings are resolved per turn from `load_user_config_effective()` (mtime-cached), so `display.platforms.<plat>.*` edits apply on the NEXT message without a gateway restart in practice. If a stale value persists, restart from a separate shell: `hermes gateway restart` is BLOCKED from inside the gateway (it would SIGTERM its own child turns).
+- `memory_notifications` (the "💾 Self-improvement review"/"Memory updated" chat notice) is read GLOBALLY as `display.memory_notifications`, NOT per-platform — the `config_defaults` comment claiming `display.platforms.<platform>.memory_notifications` is misleading and that per-platform key is silently ignored. Silence it with `hermes config set display.memory_notifications off`; bare `off` is stored verbatim because the setting's default is the string `"on"`.
 
 ### Toolsets
 
